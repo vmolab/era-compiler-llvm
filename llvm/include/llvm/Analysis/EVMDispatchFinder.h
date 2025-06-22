@@ -2,6 +2,7 @@
 #define FINDER_DISPATCHFINDER_H
 
 #include "llvm/ADT/DenseMap.h"
+#include "llvm/ADT/SmallVector.h"
 #include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/Instruction.h"
 #include "llvm/IR/Module.h"
@@ -10,7 +11,7 @@
 namespace llvm {
 
 struct DispatchFinderOpts {
-  std::vector<unsigned int> Hashes;
+  SmallVector<unsigned int, 8> Hashes;
 };
 
 class DispatchFinder : public llvm::AnalysisInfoMixin<DispatchFinder> {

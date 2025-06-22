@@ -8,6 +8,8 @@
 #include "llvm/Support/CommandLine.h"
 #include "llvm/Support/raw_ostream.h"
 
+#define DEBUG_TYPE "dispatch-finder"
+
 using namespace llvm;
 
 AnalysisKey DispatchFinder::Key;
@@ -15,6 +17,11 @@ AnalysisKey DispatchFinder::Key;
 DispatchFinder::Result DispatchFinder::run(Module &M,
                                            ModuleAnalysisManager &MAM) {
   DenseMap<unsigned int, BasicBlock *> Result;
+  //   BasicBlock *FirstHashBB;
+
+  for (auto Hash : Opts.Hashes) {
+    errs() << Hash << "\n";
+  }
 
   // Find the first hash
   for (auto &F : M) {
@@ -23,8 +30,11 @@ DispatchFinder::Result DispatchFinder::run(Module &M,
         for (auto &Operand : I.operands()) {
           if (const auto *CI = dyn_cast<ConstantInt>(Operand)) {
             const auto &ConstantValue = CI->getValue();
-            errs() << "CONSTANT AT " << BB.getName() << " : "
-                   << ConstantValue << "\n";
+            LLVM_DEBUG(dbgs() << "CONSTANT AT " << BB.getName() << " : "
+                              << ConstantValue << "\n");
+            if (Opts.Hashes[0] == ConstantValue) {
+              // First hash
+            }
           }
         }
       }

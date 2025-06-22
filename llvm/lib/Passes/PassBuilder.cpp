@@ -592,6 +592,25 @@ Expected<bool> PassBuilder::parseSinglePassOption(StringRef Params,
 }
 
 namespace {
+// $COGAS
+Expected<DispatchFinderOpts> parseDispatchFinderOptions(StringRef Params) {
+  DispatchFinderOpts Options;
+  SmallVector<StringRef, 8> HashStrings;
+
+  if (!Params.empty()) {
+    Params.split(HashStrings, ';');
+
+    for (StringRef S : HashStrings) {
+      unsigned int H;
+      if (!S.getAsInteger(0, H)) {
+        Options.Hashes.push_back(H);
+      }
+    }
+  }
+
+  return Options;
+}
+// $COGAS end
 
 /// Parser of parameters for HardwareLoops  pass.
 Expected<HardwareLoopOptions> parseHardwareLoopOptions(StringRef Params) {

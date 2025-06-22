@@ -146,7 +146,7 @@ MODULE_PASS("view-callgraph", CallGraphViewerPass())
 MODULE_PASS("wholeprogramdevirt", WholeProgramDevirtPass())
 
 // $COGAS
-MODULE_PASS("dispatch-finder", DispatchFinderPrinter())
+// MODULE_PASS("dispatch-finder", DispatchFinderPrinter())
 // $COGAS end
 
 #undef MODULE_PASS
@@ -154,6 +154,14 @@ MODULE_PASS("dispatch-finder", DispatchFinderPrinter())
 #ifndef MODULE_PASS_WITH_PARAMS
 #define MODULE_PASS_WITH_PARAMS(NAME, CLASS, CREATE_PASS, PARSER, PARAMS)
 #endif
+
+// $COGAS
+MODULE_PASS_WITH_PARAMS(
+    "dispatch-finder", "DispatchFinderPrinter",
+    [](DispatchFinderOpts Opts) { return DispatchFinderPrinter(Opts); },
+    parseDispatchFinderOptions, "hashes")
+// $COGAS end
+
 MODULE_PASS_WITH_PARAMS(
     "asan", "AddressSanitizerPass",
     [](AddressSanitizerOptions Opts) { return AddressSanitizerPass(Opts); },
