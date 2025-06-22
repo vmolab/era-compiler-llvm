@@ -321,6 +321,10 @@
 #include "llvm/Transforms/Vectorize/VectorCombine.h"
 #include <optional>
 
+// $COGAS
+#include "llvm/Analysis/EVMDispatchFinder.h"
+// $COGAS end
+
 using namespace llvm;
 
 static const Regex DefaultAliasRegex(

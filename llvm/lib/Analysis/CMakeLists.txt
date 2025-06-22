@@ -142,7 +142,13 @@ add_llvm_component_library(LLVMAnalysis
   # EraVM local begin
   VMAliasAnalysis.cpp
   # EraVM local end
+
+  # $COGAS - EVM dispatch finder
+  EVMDispatchFinder.cpp
+  # $COGAS end
+  
   ${GeneratedMLSources}
+
 
   ADDITIONAL_HEADER_DIRS
   ${LLVM_MAIN_INCLUDE_DIR}/llvm/Analysis
