@@ -31,7 +31,7 @@ private:
 
   DispatchFinderOpts Opts;
 
-  llvm::DenseMap<unsigned int, llvm::Instruction *> Found;
+  bool hasHash(unsigned int Hash, BasicBlock &BB);
 };
 
 class DispatchFinderPrinter
