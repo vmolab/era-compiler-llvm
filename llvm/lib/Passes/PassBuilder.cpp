@@ -323,6 +323,7 @@
 
 // $COGAS
 #include "llvm/Analysis/EVMDispatchFinder.h"
+#include "llvm/Transforms/COGAS/EVMDispatchSplitter.h"
 // $COGAS end
 
 using namespace llvm;
@@ -594,6 +595,30 @@ Expected<bool> PassBuilder::parseSinglePassOption(StringRef Params,
 namespace {
 // $COGAS
 Expected<DispatchFinderOpts> parseDispatchFinderOptions(StringRef Params) {
+  DispatchFinderOpts Options;
+  SmallVector<StringRef, 8> HashStrings;
+
+  if (!Params.empty()) {
+    Params.split(HashStrings, ';');
+
+    for (StringRef S : HashStrings) {
+      unsigned int H;
+      if (!S.getAsInteger(0, H)) {
+        if (H > 0xFFFFFFFF) {
+          // Should fit in 4 Bytes
+          return createStringError(inconvertibleErrorCode(),
+                                   "Given hash is too large");
+        }
+
+        Options.Hashes.push_back(H);
+      }
+    }
+  }
+
+  return Options;
+}
+
+Expected<DispatchFinderOpts> parseDispatchSplitterOptions(StringRef Params) {
   DispatchFinderOpts Options;
   SmallVector<StringRef, 8> HashStrings;
 

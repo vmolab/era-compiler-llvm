@@ -1,6 +1,5 @@
 #include "llvm/Analysis/EVMDispatchFinder.h"
 
-#include "llvm/ADT/SmallVector.h"
 #include "llvm/ADT/StringRef.h"
 #include "llvm/IR/Constants.h"
 #include "llvm/Passes/PassBuilder.h"
@@ -16,7 +15,7 @@ AnalysisKey DispatchFinder::Key;
 
 DispatchFinder::Result DispatchFinder::run(Module &M,
                                            ModuleAnalysisManager &MAM) {
-  DenseMap<unsigned int, BasicBlock *> Result;
+  SmallVector<std::pair<unsigned int, BasicBlock *>> Result;
   BasicBlock *HashBB;
 
   // Find the first hash
@@ -40,7 +39,7 @@ DispatchFinder::Result DispatchFinder::run(Module &M,
       return Result;
     }
 
-    Result[Opts.Hashes[i]] = HashBB;
+    Result.push_back({Opts.Hashes[i], HashBB});
 
     // False block
     HashBB = Branch->getSuccessor(1);
