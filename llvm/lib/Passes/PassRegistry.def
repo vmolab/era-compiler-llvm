@@ -162,8 +162,8 @@ MODULE_PASS_WITH_PARAMS(
     parseDispatchFinderOptions, "hashes")
 MODULE_PASS_WITH_PARAMS(
     "dispatch-splitter", "DispatchSplitter",
-    [](DispatchFinderOpts Opts) { return DispatchSplitter(Opts); },
-    parseDispatchSplitterOptions, "hashes")
+    [](DispatchSplitterOpts Opts) { return DispatchSplitter(Opts); },
+    parseDispatchSplitterOptions, "hashes-opt")
 // $COGAS end
 
 MODULE_PASS_WITH_PARAMS(

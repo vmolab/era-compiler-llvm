@@ -618,24 +618,36 @@ Expected<DispatchFinderOpts> parseDispatchFinderOptions(StringRef Params) {
   return Options;
 }
 
-Expected<DispatchFinderOpts> parseDispatchSplitterOptions(StringRef Params) {
-  DispatchFinderOpts Options;
-  SmallVector<StringRef, 8> HashStrings;
+Expected<DispatchSplitterOpts> parseDispatchSplitterOptions(StringRef Params) {
+  DispatchSplitterOpts Options;
+  SmallVector<StringRef, 8> HashAndOptLevelStrings;
 
   if (!Params.empty()) {
-    Params.split(HashStrings, ';');
+    Params.split(HashAndOptLevelStrings, ';');
 
-    for (StringRef S : HashStrings) {
+    for (StringRef S : HashAndOptLevelStrings) {
+      SmallVector<StringRef, 2> HashAndOptLevel;
+
+      S.split(HashAndOptLevel, '|');
+
       unsigned int H;
-      if (!S.getAsInteger(0, H)) {
+      StringRef OptLevel;
+
+      if (!HashAndOptLevel[0].getAsInteger(0, H)) {
         if (H > 0xFFFFFFFF) {
           // Should fit in 4 Bytes
           return createStringError(inconvertibleErrorCode(),
                                    "Given hash is too large");
         }
-
-        Options.Hashes.push_back(H);
       }
+
+      if (HashAndOptLevel.size() < 2) {
+        OptLevel = "";
+      } else {
+        OptLevel = HashAndOptLevel[1];
+      }
+
+      Options.HashesAndOptLevel.push_back({H, OptLevel});
     }
   }
 
