@@ -12,6 +12,7 @@
 #include "llvm/Support/SourceMgr.h"
 #include "llvm/Support/WithColor.h"
 #include "llvm/Support/raw_ostream.h"
+#include "llvm/Transforms/IPO/AlwaysInliner.h"
 #include <memory>
 #include <string>
 #include <system_error>
@@ -96,7 +97,13 @@ int main(int argc, char *argv[]) {
     Options.HashesAndOptLevel.emplace_back(Hash, OptLevel);
   }
 
-  PreservedAnalyses PA = DispatchSplitter(Options).run(*InputModule, MAM);
+  ModulePassManager MPM;
+
+  MPM.addPass(DispatchSplitter(Options));
+  MPM.addPass(AlwaysInlinerPass());
+
+  MPM.run(*InputModule, MAM);
+
   MAM.clear();
 
   InputModule->print(OutStream, nullptr);
